@@ -2,9 +2,267 @@
 <html>
 <head>
 	<title>Astronomy Final Project</title>
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+		<!--  qPTRhUJfBx2fBOomonAeOnbBf7j1QbBhA8p4aQRS  -->
+	<style>
+		body {
+			background-repeat: no-repeat;
+			background-color: #cccccc;
+			background-size: cover;
+			background-position: center;
+			height: 500px;
+		}
+		table#navBar td {
+			padding-top: 10px;
+			padding-bottom: 10px;
+		}
+		table#navBar {
+			width:100%;
+			padding-bottom: 4px;
+			padding-top: 4px;
+		}
+		button {
+			border-color: white;
+			background-color: white;
+			color: #363CD2;
+			cursor: pointer;
+			font-size: 20px;
+			font-family: serif; 
+		}
+		a:link {
+  			text-decoration: none;
+		}
+
+		a:visited {
+  			text-decoration: none;
+  			color: #363CD2;
+		}
+
+		a:hover {
+  			text-decoration: none;
+		}
+
+		a:active {
+  			text-decoration: none;
+		}
+
+		.dropdown-content {
+  			display: none;
+  			position: fixed;
+  			left: 2.5%;
+  			padding-top: 26px;
+  			width: 98%;
+			z-index: 3;
+			float: left;
+		}
+		.buttonDrop {
+			border-color: white;
+			background-color: white;
+			color: #363CD2;
+			cursor: pointer;
+			font-size: 20px;
+			font-family: serif; 
+  			border: none;
+		}
+		.dropdown {
+  			position: relative;
+  			display: inline-block;
+		}
+
+		.dropdown:hover .dropdown-content {
+			display: block;
+		}
+		.dropdown:hover .dropbtn {
+			background-color: #3e8e41;
+		}
+		.dropdown-content a:hover {
+			background-color: #ddd;
+		}
+		.dropdown-content a {
+  			text-decoration: none;
+		}
+
+		.hovering {
+  			transition: .5s ease;
+  			opacity: 0;
+  			position: absolute;
+  			top: 50%;
+  			left: 50%;
+  			transform: translate(-50%, -50%);
+ 			-ms-transform: translate(-50%, -50%);
+  			text-align: center;
+		}
+
+		.hoverText {
+  			color: #363CD2;
+  			font-size: 40px;
+  			text-align: center;
+		}
+
+		.hoverIcon {
+			position: relative;
+			text-align: center;
+		}
+
+		.hoverIcon:hover .icons {
+  			opacity: 0.05;
+  			background-color: white;
+		}
+
+		.hoverIcon:hover .hovering {
+  			opacity: 1;
+		}
+		.hoverIcon:hover {
+			background-color: white;
+		}
+
+		.playMenu {
+			width: 97%;
+			padding-right: 2%;
+			background-color: #E7E7EC;
+			color: #363CD2;
+			font-size: 30px;
+		}
+        .header {
+            font-size: 20px;
+            background-color: white;
+            color: #363CD2;
+            font-family: serif; 
+            position: fixed; 
+            width:100%;
+            text-align: center;
+            z-index: 10;
+        }
+		.rightNav {
+			padding-left: 5%; 
+			width: 30%; 
+			text-align: left; 
+			cursor: pointer;
+		}
+        .centerNav {
+            font-size: 40px;
+        }
+        .leftNav {
+            padding-right: 5%; 
+            width: 30%; 
+            text-align: right;
+        }
+
+
+
+	</style>
 </head>
 <body>
-	<h1>Astronomy Final Project</h1>
+	<script type="text/javascript">
+        function getBody(name) 
+        {
+        	const proxyurl = "https://cors-anywhere.herokuapp.com/";
+        	const myurl = "https://superheroapi.com/api/3249545798389040/search/" + name;
+        	var url = proxyurl + myurl;
+        	var request = new XMLHttpRequest();
+        	console.log("1 - request object created");
+			if ("withCredentials" in request) {
+				request.open("GET", url, true);
+			} else if (typeof XDomainRequest != "undefined") {
+				request = new XDomainRequest();
+				request.open("GET", url);
+			} else {
+				request = null;
+			}
+			if (!request) {
+				throw new Error('CORS not supported');
+			}
+			request.onreadystatechange = function() {
+	            console.log("3 - readystatechange event fired.");
+	            if (request.readyState == 4 && request.status == 200) {
+	                result = request.responseText;
+	                body = JSON.parse(result);
+	                printBody(body);
+	            } else if (request.readyState == 4) {
+	                document.getElementById("data").innerHTML = 
+	                "Something went wrong!";
+	            } else if (request.readyState == 3) {
+	                document.getElementById("data").innerHTML = 
+	                "Too soon! Try again.";
+	            }
+
+        	}
+	        request.send()
+	        console.log("4 - Request sent");
+		}
+		function getImage(myurl)
+		{
+			const proxyurl = "https://cors-anywhere.herokuapp.com/";
+        	var url = proxyurl + myurl;
+			var request = new XMLHttpRequest();
+        	console.log("1 - request object created");
+			if ("withCredentials" in request) {
+				request.open("GET", url, true);
+			} else if (typeof XDomainRequest != "undefined") {
+				request = new XDomainRequest();
+				request.open("GET", url);
+			} else {
+				request = null;
+			}
+			if (!request) {
+				throw new Error('CORS not supported');
+			}
+			request.onreadystatechange = function() {
+	            console.log("3 - readystatechange event fired.");
+	            if (request.readyState == 4 && request.status == 200) {
+	                result = request.responseText;
+	                alert(result);
+	                image = JSON.parse(result);
+	                printImage(image);
+	            } else if (request.readyState == 4) {
+	                document.getElementById("data").innerHTML = 
+	                "Something went wrong!";
+	            } else if (request.readyState == 3) {
+	                document.getElementById("data").innerHTML = 
+	                "Too soon! Try again.";
+	            }
+
+        	}
+	        request.send()
+	        console.log("4 - Request sent");
+		}
+		function printImage(image)
+		{
+			var url = image["url"];
+			document.body.style.backgroundImage = "url('" + url + "')";
+		}
+		getImage("https://api.nasa.gov/planetary/apod?api_key=qPTRhUJfBx2fBOomonAeOnbBf7j1QbBhA8p4aQRS");
+		//var input = prompt("Enter A Body");
+		//getBody(input);
+		function printHero(hero)
+		{
+			obj = hero["results"][0];
+			name = obj["name"];
+			fullName = obj["biography"]["full-name"];
+			image = obj["image"]["url"];
+			document.getElementById("data").innerHTML = 
+			"Name: " + name + "</br>" + 
+			"<img src='" + image + "'/>" + "</br>" +
+			"Full Name: " + fullName + "</br>";
+		}
+		
+   	</script>
+   	<div class="header">
+		<table id="navBar">
+			<tr style="width:100%;">
+				<td class="rightNav">
+					<div class="dropdown">
+						<button class="buttonDrop">Discover</button>	
+					</div>
+				</td>
+				<td class="centerNav"><a href="home.html">Astronomy Final Project</a></td>
+				<td class="leftNav"><a href="search.html"><button><i class="search"/></button></a>
+				</td>
+			</tr>
+		</table>
+	</div></br></br></br></br></br></br>
+	<div id="data">Loading...</div>
+
 </body>
 
 </html>
