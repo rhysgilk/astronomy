@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Astronomy Final Project</title>
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+		<!--  qPTRhUJfBx2fBOomonAeOnbBf7j1QbBhA8p4aQRS  -->
+		<link rel="stylesheet" href="astrostyle.css">
+	<style>
+		.data {
+			color: white;
+			text-align: center;
+			font-size: 18px;
+            font-family: Georgia,Times,"Times New Roman",serif;
+		}
+		#BName {
+			color: white;
+			text-align: center;
+			font-weight: bold;
+			font-size: 24px;
+            font-family: Georgia,Times,"Times New Roman",serif;
+		}
+	</style>
+</head>
+<body>
+	<script src="https://code.jquery.com/jquery-3.4.1.js" 
+    integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" 
+    crossorigin="anonymous"></script>
+    <script language="javascript">
+        $(function(){
+            $('body').hide();
+            $('body').fadeIn(3000);
+
+            $('a').click(function(){
+                link = $(this).attr('href');
+                $('body').fadeOut(1000, function(){
+                    window.location.href = link;
+                });
+                return false;
+            });
+        });
+    </script>
+	<div class="headspace" />
+	<div id="BName">Loading</div><br />
+	<div class="data">
+		<div id="BEngName">Loading</div><br />
+		<div id="BMass">Loading</div><br />
+		<div id="BDensity">Loading</div><br />
+		<div id="BDiscovery">Loading</div>
+	</div>
+	<div class="header">
+        <h1><a href="home.html">Astronomy Final Project</a></h1>
+        <span class="menu">
+            <span class="nav1"><a href="discover.html">Discover</a></span>
+        </span>
+    </div>
+	<script type="text/javascript">
+        function getBody() 
+        {
+        	var myurl = "https://api.le-systeme-solaire.net/rest/bodies/";
+        	const proxyurl = "https://cors-anywhere.herokuapp.com/";
+        	var url = proxyurl + myurl;
+			var request = new XMLHttpRequest();
+        	console.log("1 - request object created");
+			if ("withCredentials" in request) {
+				request.open("GET", url, true);
+			} else if (typeof XDomainRequest != "undefined") {
+				request = new XDomainRequest();
+				request.open("GET", url);
+			} else {
+				request = null;
+			}
+			if (!request) {
+				throw new Error('CORS not supported');
+			}
+			request.onreadystatechange = function() {
+	            console.log("3 - readystatechange event fired.");
+	            if (request.readyState == 4 && request.status == 200) {
+	                result = request.responseText;
+	                body = JSON.parse(result);
+	                var rand = Math.floor((Math.random() * 287));
+	                printBody(body["bodies"][rand]);
+	            } else if (request.readyState == 4) {
+	                document.getElementById("info").innerHTML = 
+	                "Something went wrong!";
+	            } else if (request.readyState == 3) {
+	                document.getElementById("info").innerHTML = 
+	                "Too soon! Try again.";
+	            }
+
+        	}
+	        request.send()
+	        console.log("4 - Request sent");
+		}
+		function searchBody(name) 
+        {
+        	var myurl = "https://api.le-systeme-solaire.net/rest/bodies/" + name;
+        	const proxyurl = "https://cors-anywhere.herokuapp.com/";
+        	var url = proxyurl + myurl;
+			var request = new XMLHttpRequest();
+        	console.log("1 - request object created");
+			if ("withCredentials" in request) {
+				request.open("GET", url, true);
+			} else if (typeof XDomainRequest != "undefined") {
+				request = new XDomainRequest();
+				request.open("GET", url);
+			} else {
+				request = null;
+			}
+			if (!request) {
+				throw new Error('CORS not supported');
+			}
+			request.onreadystatechange = function() {
+	            console.log("3 - readystatechange event fired.");
+	            if (request.readyState == 4 && request.status == 200) {
+	                result = request.responseText;
+	                body = JSON.parse(result);
+	                printBody(body);
+	            } else if (request.readyState == 4) {
+	                document.getElementById("data").innerHTML = 
+	                "Something went wrong!";
+	            } else if (request.readyState == 3) {
+	                document.getElementById("data").innerHTML = 
+	                "Too soon! Try again.";
+	            }
+
+        	}
+	        request.send()
+	        console.log("4 - Request sent");
+		}
+		getBody();
+		//searchBody(name);
+		function printBody(body)
+		{
+			var name = body["name"];
+			var engName = body["englishName"];
+			var massVal = body["mass"]["massValue"]; //kg
+			var massEx = body["mass"]["massExponent"];
+			var density = body["density"]; // g.cm^3
+			var discoveredBy = body["discoveredBy"];
+			var discoveryDate = body["discoveryDate"];
+			document.getElementById("BName").innerHTML = name;
+			document.getElementById("BEngName").innerHTML = "English name: " + engName;
+			document.getElementById("BDensity").innerHTML = density + " g/cm<sup>3</sup>";
+			document.getElementById("BMass").innerHTML = massVal + " * 10<sup>" + massEx + "</sup> kg";
+			document.getElementById("BDiscovery").innerHTML = "Discovered by: " + discoveredBy + " in " + discoveryDate;
+			alert(name + " " + engName + " " + massVal + " " + massEx + " " + density + " " + discoveredBy + " " + discoveryDate);
+		}
+		
+   	</script>
+	<div id="info">Loading...</div>
+
+</body>
+
+</html>
