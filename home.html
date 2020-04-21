@@ -44,12 +44,12 @@
         });
     </script>
 	<div class="headspace" />
-	<div id="ITitle">Loading</div><br />
+	<div id="ITitle">Generating Image Of The Day</div><br />
 	<div class="data">
-		<div id="IOTD">Loading</div><br />
-		<div id="IInfo">Loading</div><br />
-		<div id="ICopy">Loading</div><br />
-		<div id="IDate">Loading</div>
+		<div id="IOTD"></div><br />
+		<div id="IInfo"></div><br />
+		<div id="ICopy"></div><br />
+		<div id="IDate"></div>
 	</div>
 	<div class="header">
         <h1><a href="home.html">Astronomy Final Project</a></h1>
@@ -82,11 +82,11 @@
 	                image = JSON.parse(result);
 	                printImage(image);
 	            } else if (request.readyState == 4) {
-	                document.getElementById("info").innerHTML = 
-	                "Something went wrong!";
+	                //document.getElementById("info").innerHTML = 
+	                //"Something went wrong!";
 	            } else if (request.readyState == 3) {
-	                document.getElementById("info").innerHTML = 
-	                "Too soon! Try again.";
+	                //document.getElementById("info").innerHTML = 
+	                //"Too soon! Try again.";
 	            }
 
         	}
@@ -112,7 +112,7 @@
 		}
 		getImage("https://api.nasa.gov/planetary/apod?api_key=qPTRhUJfBx2fBOomonAeOnbBf7j1QbBhA8p4aQRS");
    	</script>
-   	<div id="info">Loading</div>
+   	<div id="info"></div>
 </body>
 
 </html>
