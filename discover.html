@@ -19,6 +19,9 @@
 			font-size: 24px;
             font-family: Georgia,Times,"Times New Roman",serif;
 		}
+		#BImage {
+			text-align: center;
+		}
 	</style>
 </head>
 <body>
@@ -40,12 +43,14 @@
         });
     </script>
 	<div class="headspace" />
-	<div id="BName">Loading</div><br />
+	<div id="BName">Finding Body</div><br />
+	<div id="BImage"></div><br />
 	<div class="data">
-		<div id="BEngName">Loading</div><br />
-		<div id="BMass">Loading</div><br />
-		<div id="BDensity">Loading</div><br />
-		<div id="BDiscovery">Loading</div>
+		<div id="BEngName"></div><br />
+		<div id="BMass"></div><br />
+		<div id="BDensity"></div><br />
+		<div id="BDiscovery"></div><br />
+		<button type="button" onclick="regen()">Rediscover!</button><br />
 	</div>
 	<div class="header">
         <h1><a href="home.html">Astronomy Final Project</a></h1>
@@ -54,6 +59,61 @@
         </span>
     </div>
 	<script type="text/javascript">
+		function getImage(name, title)
+		{
+			var myurl = "https://images-api.nasa.gov/search?q=" + name;
+        	const proxyurl = "https://cors-anywhere.herokuapp.com/";
+        	var url = proxyurl + myurl;
+			var request = new XMLHttpRequest();
+        	console.log("1 - request object created");
+			if ("withCredentials" in request) {
+				request.open("GET", url, true);
+			} else if (typeof XDomainRequest != "undefined") {
+				request = new XDomainRequest();
+				request.open("GET", url);
+			} else {
+				request = null;
+			}
+			if (!request) {
+				throw new Error('CORS not supported');
+			}
+			request.onreadystatechange = function() {
+	            console.log("3 - readystatechange event fired.");
+	            if (request.readyState == 4 && request.status == 200) {
+	                result = request.responseText;
+	                //alert(result);
+	                image = JSON.parse(result);
+	                if (image["collection"]["metadata"]["total_hits"] == 0)
+	                	getBody();
+	                else
+	                	printImage(image, title);
+	            } else if (request.readyState == 4) {
+	                //document.getElementById("info").innerHTML = 
+	                //"Something went wrong!";
+	            } else if (request.readyState == 3) {
+	                //document.getElementById("info").innerHTML = 
+	                //"Too soon! Try again.";
+	            }
+
+        	}
+	        request.send()
+	        console.log("4 - Request sent");
+			
+		}
+		function regen()
+		{
+			document.getElementById("BImage").innerHTML = "";
+			document.getElementById("BName").innerHTML = "Finding Body";
+			getBody();
+		}
+		function printImage(body, name)
+		{
+			var url = image["collection"]["items"][0]["links"][0]["href"];
+			//alert(url);
+			document.getElementById("BImage").innerHTML = "<img src='" + url + "' height='510' width='auto'/>";
+			document.getElementById("BName").innerHTML = name;
+
+		}
         function getBody() 
         {
         	var myurl = "https://api.le-systeme-solaire.net/rest/bodies/";
@@ -80,11 +140,11 @@
 	                var rand = Math.floor((Math.random() * 287));
 	                printBody(body["bodies"][rand]);
 	            } else if (request.readyState == 4) {
-	                document.getElementById("info").innerHTML = 
-	                "Something went wrong!";
+	                //document.getElementById("info").innerHTML = 
+	                //"Something went wrong!";
 	            } else if (request.readyState == 3) {
-	                document.getElementById("info").innerHTML = 
-	                "Too soon! Try again.";
+	                //document.getElementById("info").innerHTML = 
+	                //"Too soon! Try again.";
 	            }
 
         	}
@@ -116,11 +176,11 @@
 	                body = JSON.parse(result);
 	                printBody(body);
 	            } else if (request.readyState == 4) {
-	                document.getElementById("data").innerHTML = 
-	                "Something went wrong!";
+	                //document.getElementById("data").innerHTML = 
+	                //"Something went wrong!";
 	            } else if (request.readyState == 3) {
-	                document.getElementById("data").innerHTML = 
-	                "Too soon! Try again.";
+	                //document.getElementById("data").innerHTML = 
+	                //"Too soon! Try again.";
 	            }
 
         	}
@@ -130,24 +190,31 @@
 		getBody();
 		//searchBody(name);
 		function printBody(body)
-		{
-			var name = body["name"];
-			var engName = body["englishName"];
-			var massVal = body["mass"]["massValue"]; //kg
-			var massEx = body["mass"]["massExponent"];
-			var density = body["density"]; // g.cm^3
-			var discoveredBy = body["discoveredBy"];
-			var discoveryDate = body["discoveryDate"];
-			document.getElementById("BName").innerHTML = name;
-			document.getElementById("BEngName").innerHTML = "English name: " + engName;
-			document.getElementById("BDensity").innerHTML = density + " g/cm<sup>3</sup>";
-			document.getElementById("BMass").innerHTML = massVal + " * 10<sup>" + massEx + "</sup> kg";
-			document.getElementById("BDiscovery").innerHTML = "Discovered by: " + discoveredBy + " in " + discoveryDate;
-			alert(name + " " + engName + " " + massVal + " " + massEx + " " + density + " " + discoveredBy + " " + discoveryDate);
+		{ 
+			if (body != null && body["mass"] != null){
+				var name = body["name"];
+				var engName = body["englishName"];
+				var massVal = body["mass"]["massValue"]; //kg
+				var massEx = body["mass"]["massExponent"];
+				var density = body["density"]; // g.cm^3
+				var discoveredBy = body["discoveredBy"];
+				var discoveryDate = body["discoveryDate"];
+				document.getElementById("BEngName").innerHTML = "English name: " + engName;
+				document.getElementById("BDensity").innerHTML = "Density: " + density + " g/cm<sup>3</sup>";
+				document.getElementById("BMass").innerHTML = "Mass: " + massVal + " * 10<sup>" + massEx + "</sup> kg";
+				if (body["isPlanet"] == true)
+					document.getElementById("BDiscovery").innerHTML = "A Planet discovered by: " + discoveredBy + " in " + discoveryDate;
+				else
+					document.getElementById("BDiscovery").innerHTML = "Discovered by: " + discoveredBy + " in " + discoveryDate;
+				//alert(name + " " + engName + " " + massVal + " " + massEx + " " + density + " " + discoveredBy + " " + discoveryDate);
+				getImage(engName, name);
+			}
+			else
+				getBody();
 		}
 		
    	</script>
-	<div id="info">Loading...</div>
+	<div id="info"></div>
 
 </body>
 
