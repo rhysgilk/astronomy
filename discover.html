@@ -3,7 +3,6 @@
 <head>
 	<title>Astronomy Final Project</title>
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-		<!--  qPTRhUJfBx2fBOomonAeOnbBf7j1QbBhA8p4aQRS  -->
 		<link rel="stylesheet" href="astrostyle.css">
 	<style>
 		.data {
@@ -21,6 +20,9 @@
 		}
 		#BImage {
 			text-align: center;
+		}
+		form {
+			display: inline-block;
 		}
 	</style>
 </head>
@@ -50,7 +52,11 @@
 		<div id="BMass"></div><br />
 		<div id="BDensity"></div><br />
 		<div id="BDiscovery"></div><br />
-		<button type="button" onclick="regen()">Rediscover!</button><br />
+		<button type="button" onclick="regen()">Rediscover!</button>
+		<form>
+			<input type="text" id="search"></input>
+			<button type="button" onclick="userSearch()">Search!</button><br />
+		</form>
 	</div>
 	<div class="header">
         <h1><a href="home.html">Astronomy Final Project</a></h1>
@@ -59,6 +65,11 @@
         </span>
     </div>
 	<script type="text/javascript">
+		function userSearch()
+		{
+			searchBody(document.getElementById('search').value);
+			document.getElementById('search').value = "";
+		}
 		function getImage(name, title)
 		{
 			var myurl = "https://images-api.nasa.gov/search?q=" + name;
@@ -81,18 +92,13 @@
 	            console.log("3 - readystatechange event fired.");
 	            if (request.readyState == 4 && request.status == 200) {
 	                result = request.responseText;
-	                //alert(result);
 	                image = JSON.parse(result);
 	                if (image["collection"]["metadata"]["total_hits"] == 0)
-	                	getBody();
+	                	printImageNoPic(image, title);
 	                else
 	                	printImage(image, title);
 	            } else if (request.readyState == 4) {
-	                //document.getElementById("info").innerHTML = 
-	                //"Something went wrong!";
 	            } else if (request.readyState == 3) {
-	                //document.getElementById("info").innerHTML = 
-	                //"Too soon! Try again.";
 	            }
 
         	}
@@ -109,10 +115,13 @@
 		function printImage(body, name)
 		{
 			var url = image["collection"]["items"][0]["links"][0]["href"];
-			//alert(url);
-			document.getElementById("BImage").innerHTML = "<img src='" + url + "' height='510' width='auto'/>";
+			document.getElementById("BImage").innerHTML = "<img src='" + url + "' height='475' width='auto'/>";
 			document.getElementById("BName").innerHTML = name;
-
+		}
+		function printImageNoPic(body, name)
+		{
+			document.getElementById("BImage").innerHTML = "<div class='data'>No Image Found</div>";
+			document.getElementById("BName").innerHTML = name;
 		}
         function getBody() 
         {
@@ -139,12 +148,7 @@
 	                body = JSON.parse(result);
 	                var rand = Math.floor((Math.random() * 287));
 	                printBody(body["bodies"][rand]);
-	            } else if (request.readyState == 4) {
-	                //document.getElementById("info").innerHTML = 
-	                //"Something went wrong!";
 	            } else if (request.readyState == 3) {
-	                //document.getElementById("info").innerHTML = 
-	                //"Too soon! Try again.";
 	            }
 
         	}
@@ -176,11 +180,7 @@
 	                body = JSON.parse(result);
 	                printBody(body);
 	            } else if (request.readyState == 4) {
-	                //document.getElementById("data").innerHTML = 
-	                //"Something went wrong!";
 	            } else if (request.readyState == 3) {
-	                //document.getElementById("data").innerHTML = 
-	                //"Too soon! Try again.";
 	            }
 
         	}
@@ -188,7 +188,6 @@
 	        console.log("4 - Request sent");
 		}
 		getBody();
-		//searchBody(name);
 		function printBody(body)
 		{ 
 			if (body != null && body["mass"] != null){
@@ -206,7 +205,6 @@
 					document.getElementById("BDiscovery").innerHTML = "A Planet discovered by: " + discoveredBy + " in " + discoveryDate;
 				else
 					document.getElementById("BDiscovery").innerHTML = "Discovered by: " + discoveredBy + " in " + discoveryDate;
-				//alert(name + " " + engName + " " + massVal + " " + massEx + " " + density + " " + discoveredBy + " " + discoveryDate);
 				getImage(engName, name);
 			}
 			else
